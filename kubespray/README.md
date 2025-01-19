@@ -18,9 +18,13 @@ root@node1-master:# reboot now
 
 ## Construction
 1. Copy inventory
+   ```
+   cp -rfp inventory kubespray/inventory/mycluster
+   ```
 1. Configure python venv
 1. Run playbook (takes about 20mins)
    ```
+   cd kubespray
    ansible-playbook -i inventory/mycluster/hosts.yaml -u $USERNAME -b -v cluster.yml --ask-become-pass --ask-pass
    ```
 

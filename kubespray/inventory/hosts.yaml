@@ -1,9 +1,9 @@
 all:
   hosts:
     node1-master:
-      ansible_host: 192.168.1.237
-      ip: 192.168.1.237
-      access_ip: 192.168.1.237
+      ansible_host: 192.168.1.137
+      ip: 192.168.1.137
+      access_ip: 192.168.1.137
     node2-worker:
       ansible_host: 192.168.1.118
       ip: 192.168.1.118
