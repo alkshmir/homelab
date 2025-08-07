@@ -44,7 +44,9 @@ spec:
               value: ouchiyomomo0928.f5.si
             - name: LANG
               value: en
-          image: ghcr.io/wg-easy/wg-easy
+            - name: INSECURE
+              value: "true"
+          image: ghcr.io/wg-easy/wg-easy:15.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 51820
