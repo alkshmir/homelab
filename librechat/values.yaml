@@ -1,0 +1,83 @@
+# see https://github.com/danny-avila/LibreChat/blob/main/helm/librechat/values.yaml
+
+librechat:
+  configEnv:
+    PLUGIN_MODELS: gpt-4,gpt-4-turbo-preview,gpt-4-0125-preview,gpt-4-1106-preview,gpt-4-0613,gpt-3.5-turbo,gpt-3.5-turbo-0125,gpt-3.5-turbo-1106,gpt-3.5-turbo-0613
+    ALLOW_REGISTRATION: "true"
+
+    # existing Secret for all envs/ only Passwords. Can be locally generated with: kubectl create secret generic librechat-secret-envs --from-env-file=.env.example --dry-run=client -o yaml > secret-envs.yaml
+    # For better maintainabillity, you can put all vars directly in the config Section and only overwrite Secrets with this if nessesary.
+    # Required Values:
+    # - MEILI_MASTER_KEY
+  existingSecretName: "librechat-credentials-env"
+  
+  # Volume used to store image Files uploaded to the Web UI
+  imageVolume:
+    enabled: true
+    size: 10G
+    accessModes: ReadWriteOnce
+    storageClassName: longhorn
+
+imagePullSecrets: []
+
+service:
+  type: ClusterIP
+  port: 3080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chat.example.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chat.example.com
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+
+# MongoDB Parameters
+mongodb:
+  image:
+    # overwright image to suppport arm64
+    # see https://github.com/bitnami/charts/issues/3635#issuecomment-2628385764
+    repository: dlavrenuek/bitnami-mongodb-arm
+    tag: 7.0.15
+  enabled: true
+  auth:
+    enabled: false
+  databases:
+   - LibreChat
+#  persistence: 
+#    size: 8Gi
+
+
+meilisearch:
+  enabled: true
+  persistence:
+    enabled: true
+    storageClass: longhorn
+  auth:
+    # Use an existing Kubernetes secret for the MEILI_MASTER_KEY
+    existingMasterKeySecret: "librechat-credentials-env"
+
