@@ -1,0 +1,57 @@
+# need etcd backend to make external-dns work
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: dns-etcd
+  namespace: homelab-dns
+spec:
+  serviceName: dns-etcd
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-etcd
+  template:
+    metadata:
+      labels:
+        app: dns-etcd
+    spec:
+      containers:
+      - name: dns-etcd
+        image: quay.io/coreos/etcd:v3.6.4
+        ports:
+        - containerPort: 2379
+        - containerPort: 2380
+        command:
+        - /usr/local/bin/etcd
+        - --name=etcd-0
+        - --data-dir=/var/lib/etcd
+        - --advertise-client-urls=http://0.0.0.0:2379
+        - --listen-client-urls=http://0.0.0.0:2379
+        - --listen-peer-urls=http://0.0.0.0:2380
+        volumeMounts:
+        - name: dns-etcd-data
+          mountPath: /var/lib/etcd
+  volumeClaimTemplates:
+  - metadata:
+      name: dns-etcd-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-etcd
+  namespace: homelab-dns
+spec:
+  clusterIP: None
+  ports:
+  - port: 2379
+    name: client
+  - port: 2380
+    name: peer
+  selector:
+    app: dns-etcd
+---
