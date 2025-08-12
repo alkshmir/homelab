@@ -1,0 +1,18 @@
+externalURL: http://core.harbor.homelab.local
+adminPassword: "changeme"
+exposureType: ingress
+ingress:
+  core:
+    ingressClassName: nginx
+    pathType: Prefix
+    hostname: core.harbor.homelab.local
+postgresql:
+  enabled: true
+  primary:
+    persistence:
+      size: 1Gi
+redis:
+  enabled: true
+  master:
+    persistence:
+      size: 1Gi
