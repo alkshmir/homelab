@@ -28,6 +28,9 @@ spec:
         - --advertise-client-urls=http://0.0.0.0:2379
         - --listen-client-urls=http://0.0.0.0:2379
         - --listen-peer-urls=http://0.0.0.0:2380
+        - --initial-advertise-peer-urls=http://etcd-0.dns-etcd.homelab-dns.svc.cluster.local:2380
+        - --initial-cluster=etcd-0=http://etcd-0.dns-etcd.homelab-dns.svc.cluster.local:2380
+        - --initial-cluster-state=new
         volumeMounts:
         - name: dns-etcd-data
           mountPath: /var/lib/etcd
@@ -38,7 +41,7 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 512Mi
+          storage: 256Mi
 ---
 apiVersion: v1
 kind: Service
