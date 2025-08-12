@@ -60,6 +60,7 @@ spec:
         - --source=ingress
         - --provider=coredns
         - --policy=sync
+        # - --log-level=debug
         env:
         - name: ETCD_URLS
           value: http://dns-etcd.homelab-dns:2379
