@@ -10,11 +10,11 @@ librechat:
     # Required Values:
     # - MEILI_MASTER_KEY
   existingSecretName: "librechat-credentials-env"
-  
+
   # Volume used to store image Files uploaded to the Web UI
   imageVolume:
     enabled: true
-    size: 10G
+    size: 8G
     accessModes: ReadWriteOnce
     storageClassName: longhorn
 
@@ -67,17 +67,16 @@ mongodb:
   auth:
     enabled: false
   databases:
-   - LibreChat
-#  persistence: 
+    - LibreChat
+#  persistence:
 #    size: 8Gi
-
 
 meilisearch:
   enabled: true
   persistence:
     enabled: true
     storageClass: longhorn
+    size: 8Gi
   auth:
     # Use an existing Kubernetes secret for the MEILI_MASTER_KEY
     existingMasterKeySecret: "librechat-credentials-env"
-
