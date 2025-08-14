@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: detox
+  namespace: homelab-dns
+spec:
+  ports:
+    - port: 8080
+      name: http
+  selector:
+    app: detox
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: detox
+  namespace: homelab-dns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: detox
+  template:
+    metadata:
+      labels:
+        app: detox
+    spec:
+      containers:
+        - name: detox
+          image: ghcr.io/alkshmir/sinkhole-detox:sha-cc6e520
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: CONFIG_FILE_PATH
+              value: /etc/detox/config.yaml
+            - name: TZ
+              value: Asia/Tokyo
+          volumeMounts:
+            - name: detox-config
+              mountPath: /etc/detox
+      volumes:
+        - name: detox-config
+          configMap:
+            name: detox-config
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: detox-config
+  namespace: homelab-dns
+data:
+  config.yaml: |
+    server:
+      port: 8080
+    blockers:
+      - name: "twitter"
+        domain: "twitter.com"
+        rules:
+          - type: everyday
+            ops: block
+            # RFC 3339 time format
+            start: "00:00"
+            end: "05:00"
+          #- type: weekday
+          #  ops: block
+          #  start: "08:00"
+          #  end: "18:00"
+          #  weekdays: [1, 2, 3, 4, 5] # Monday to Friday
+      - name: "x"
+        domain: "x.com"
+        rules:
+          - type: everyday
+            ops: block
+            start: "00:00"
+            end: "05:00"
+          #- type: weekday
+          #  ops: block
+          #  start: "10:00"
+          #  end: "16:00"
+          #  weekdays: [1, 2, 3, 4, 5] # Monday to Friday

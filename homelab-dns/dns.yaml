@@ -116,9 +116,12 @@ data:
         ads:
           - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
           - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
+          - http://detox:8080/
       clientGroupsBlock:
         default:
           - ads
+      loading:
+        refreshPeriod: 5m
     ports:
       dns: 1053
       http: 4000
