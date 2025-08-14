@@ -23,3 +23,11 @@ docker run --rm alpine/curl --dns-servers 192.168.1.240 http://<your-service>.ho
 ```
 
 If you want to access ingress service with your client PC, configure the target DNS server to use coreDNS loadBalancerIP (`192.168.1.240` in this case).
+
+## Confirm blocking
+
+To confirm the dns sinkhole with [0xERR0R/blocky](https://github.com/0xERR0R/blocky), pick one blocking domain from `blocky-config` ConfigMap and run
+```bash
+dig @192.168.1.240 <blocking-domain> +short
+```
+If it's blocking successfully, it returns `0.0.0.0`.
