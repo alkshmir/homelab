@@ -122,6 +122,11 @@ data:
           - ads
       loading:
         refreshPeriod: 5m
+    customDNS:
+      customTTL: 1m
+      rewrite:
+        twitter.com: twitter.com
+        x.com: x.com
     ports:
       dns: 1053
       http: 4000

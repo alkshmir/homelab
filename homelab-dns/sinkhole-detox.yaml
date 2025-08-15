@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: detox
-          image: ghcr.io/alkshmir/sinkhole-detox:sha-cc6e520
+          image: ghcr.io/alkshmir/sinkhole-detox:sha-fc9fe5a
           ports:
             - containerPort: 8080
               name: http
@@ -57,7 +57,7 @@ data:
       port: 8080
     blockers:
       - name: "twitter"
-        domain: "twitter.com"
+        domain: "*.twitter.com"
         rules:
           - type: everyday
             ops: block
@@ -70,7 +70,7 @@ data:
           #  end: "18:00"
           #  weekdays: [1, 2, 3, 4, 5] # Monday to Friday
       - name: "x"
-        domain: "x.com"
+        domain: "*.x.com"
         rules:
           - type: everyday
             ops: block
