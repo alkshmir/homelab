@@ -6,6 +6,7 @@ Bootstrap raspberry pi cluster
 
 - Raspberry pi 5 Debian 12 (worker node)
 - Raspberry pi 4 Debian 12 (control-plane node)
+- [NucBox G3 Debian 13 (worker node)](./adding-node.md)
 
 ## Preparation
 
