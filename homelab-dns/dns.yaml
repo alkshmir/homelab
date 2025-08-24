@@ -127,6 +127,9 @@ data:
       rewrite:
         twitter.com: twitter.com
         x.com: x.com
+        wikipedia.org: wikipedia.org
+        wikimedia.org: wikimedia.org
+        mahjongsoul.com: mahjongsoul.com
     ports:
       dns: 1053
       http: 4000
