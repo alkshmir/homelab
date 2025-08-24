@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: detox
-          image: ghcr.io/alkshmir/sinkhole-detox:sha-fc9fe5a
+          image: ghcr.io/alkshmir/sinkhole-detox:0.0.1
           ports:
             - containerPort: 8080
               name: http
@@ -95,3 +95,10 @@ data:
             ops: block
             start: "00:00"
             end: "05:00"
+      - name: "mahjongsoul"
+        domain: "*.mahjongsoul.com"
+        rules:
+          - type: everyday
+            ops: block
+            start: "00:00"
+            end: "08:00"
