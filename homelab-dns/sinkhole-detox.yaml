@@ -102,3 +102,10 @@ data:
             ops: block
             start: "00:00"
             end: "08:00"
+      - name: "youtube"
+        domain: "*.youtube.com"
+        rules:
+          - type: everyday
+            ops: block
+            start: "00:00"
+            end: "05:00"
