@@ -60,10 +60,13 @@ readinessProbe:
 # MongoDB Parameters
 mongodb:
   image:
-    # overwright image to suppport arm64
+    # if you want to deploy mongo to arm64 node, overwrite image to suppport arm64
     # see https://github.com/bitnami/charts/issues/3635#issuecomment-2628385764
-    repository: dlavrenuek/bitnami-mongodb-arm
+    # repository: dlavrenuek/bitnami-mongodb-arm
     tag: 7.0.15
+  nodeSelector:
+    # force scheduling to amd64 node
+    kubernetes.io/arch: amd64
   enabled: true
   auth:
     enabled: false
