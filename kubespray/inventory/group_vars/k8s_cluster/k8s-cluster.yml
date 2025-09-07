@@ -17,7 +17,7 @@ kube_token_dir: "{{ kube_config_dir }}/tokens"
 kube_api_anonymous_auth: true
 
 ## Change this to use another Kubernetes version, e.g. a current beta release
-kube_version: 1.31.4
+kube_version: 1.32.6
 
 # Where the binaries will be downloaded.
 # Note: ensure that you've enough disk space (about 1G)
@@ -26,7 +26,7 @@ local_release_dir: "/tmp/releases"
 retry_stagger: 5
 
 # This is the user that owns tha cluster installation.
-kube_owner: kube
+kube_owner: root
 
 # This is the group that the cert creation scripts chgrp the
 # cert files to. Not really changeable...
