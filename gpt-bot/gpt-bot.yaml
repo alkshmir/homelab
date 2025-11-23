@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpt-bot
+  namespace: gpt-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gpt-bot
+  template:
+    metadata:
+      labels:
+        app: gpt-bot
+    spec:
+      containers:
+      - name: gpt-bot
+        image: ghcr.io/alkshmir/go-openai-discord:v0.0.3
+        envFrom:
+        - secretRef:
+            name: gpt-bot-credentials
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
