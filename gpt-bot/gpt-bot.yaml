@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: gpt-bot
-        image: ghcr.io/alkshmir/go-openai-discord:v0.0.3
+        image: ghcr.io/alkshmir/go-openai-discord:v0.0.4
         envFrom:
         - secretRef:
             name: gpt-bot-credentials
