@@ -5,13 +5,13 @@ metadata:
   name: external-dns
 rules:
 - apiGroups: [""]
-  resources: ["services","pods"]
+  resources: ["services","pods","namespaces"]
   verbs: ["get","watch","list"]
 - apiGroups: ["discovery.k8s.io"]
   resources: ["endpointslices"]
   verbs: ["get","watch","list"]
-- apiGroups: ["extensions","networking.k8s.io"]
-  resources: ["ingresses"]
+- apiGroups: ["gateway.networking.k8s.io"]
+  resources: ["gateways","httproutes"]
   verbs: ["get","watch","list"]
 - apiGroups: [""]
   resources: ["nodes"]
@@ -57,7 +57,7 @@ spec:
       - name: external-dns
         image: registry.k8s.io/external-dns/external-dns:v0.18.0
         args:
-        - --source=ingress
+        - --source=gateway-httproute
         - --provider=coredns
         - --policy=sync
         # - --log-level=debug
