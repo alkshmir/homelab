@@ -2,17 +2,23 @@ service:
   type: ClusterIP
 
 ingress:
+  enabled: false
+
+httproute:
   enabled: true
-  className: nginx
-  pathtype: Prefix
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-  hosts:
-    - host: zot.homelab.local
-      paths:
-        - path: /
+  parentRefs:
+    - name: traefik-gateway
+      namespace: traefik
+  hostnames:
+    - zot.homelab.local
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      timeouts:
+        request: 600s
+        backendRequest: 600s
 
 persistence: true
 pvc:

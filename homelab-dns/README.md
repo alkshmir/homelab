@@ -4,14 +4,14 @@
 1. `k apply -f etcd.yaml -f dns.yaml`
    Note: corefile is now only configured to use etcd for `homelab.local` domains.
 1. Confrim coredns is working: `dig @192.168.1.240 google.com`
-1. Deploy external-dns to synchronize ingress A record
+1. Deploy external-dns to synchronize Gateway API HTTPRoute A record
    ```
    k apply -f external-dns.yaml
    ```
 
-## Ingress Example
+## HTTPRoute Example
 
-If your ingress is configured as `<your-service>.homelab.local`, run following command to confirm the synchronization of ingress record.
+If your HTTPRoute is configured with hostname `<your-service>.homelab.local`, run following command to confirm the synchronization of DNS record.
 
 ```bash
 curl --dns-servers 192.168.1.240 http://<your-service>.homelab.local

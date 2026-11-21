@@ -10,4 +10,5 @@
    Use https://www.librechat.ai/toolkit/creds_generator
 1. Use arm64 mongodb image
    `helm dependency build ./LibreChat/helm/librechat`
-1. `helm install -n librechat librechat ./LibreChat/helm/librechat --values values.yaml`
+1. `helm upgrade --install -n librechat librechat ./LibreChat/helm/librechat --values values.yaml`
+1. `k apply -f httproute.yaml`
