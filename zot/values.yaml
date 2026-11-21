@@ -1,0 +1,41 @@
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  className: nginx
+  pathtype: Prefix
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  hosts:
+    - host: zot.homelab.local
+      paths:
+        - path: /
+
+persistence: true
+pvc:
+  storage: 5Gi
+
+mountConfig: true
+configFiles:
+  config.json: |-
+    {
+      "storage": {
+        "rootDirectory": "/var/lib/registry"
+      },
+      "http": {
+        "address": "0.0.0.0",
+        "port": "5000",
+        "readTimeout": "60s",
+        "writeTimeout": "60s"
+      },
+      "log": {
+        "level": "info"
+      },
+      "extensions": {
+        "search": { "enable": true },
+        "ui": { "enable": true }
+      }
+    }
