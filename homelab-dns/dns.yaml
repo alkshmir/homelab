@@ -90,7 +90,6 @@ data:
         etcd homelab.local {
           endpoint http://dns-etcd:2379
           path /skydns
-          fallthrough
         }
         forward . 127.0.0.1:1053
         cache 30
