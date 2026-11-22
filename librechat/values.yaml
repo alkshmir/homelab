@@ -1,4 +1,8 @@
-# see https://github.com/danny-avila/LibreChat/blob/main/helm/librechat/values.yaml
+# see https://github.com/LibreChat-AI/LibreChat/blob/chart-3.2.1/helm/librechat/values.yaml
+
+global:
+  librechat:
+    existingSecretName: "librechat-credentials-env"
 
 librechat:
   configEnv:
@@ -6,18 +10,15 @@ librechat:
     ALLOW_REGISTRATION: "true"
     SESSION_EXPIRY: "3600000" # 1 hour
 
-    # existing Secret for all envs/ only Passwords. Can be locally generated with: kubectl create secret generic librechat-secret-envs --from-env-file=.env.example --dry-run=client -o yaml > secret-envs.yaml
-    # For better maintainabillity, you can put all vars directly in the config Section and only overwrite Secrets with this if nessesary.
-    # Required Values:
-    # - MEILI_MASTER_KEY
-  existingSecretName: "librechat-credentials-env"
-
   # Volume used to store image Files uploaded to the Web UI
   imageVolume:
     enabled: true
     size: 8G
     accessModes: ReadWriteOnce
     storageClassName: longhorn
+
+updateStrategy:
+  type: Recreate
 
 imagePullSecrets: []
 
@@ -67,6 +68,8 @@ mongodb:
   nodeSelector:
     # force scheduling to amd64 node
     kubernetes.io/arch: amd64
+  updateStrategy:
+    type: Recreate
   enabled: true
   auth:
     enabled: false
