@@ -17,7 +17,7 @@ kube_token_dir: "{{ kube_config_dir }}/tokens"
 kube_api_anonymous_auth: true
 
 ## Change this to use another Kubernetes version, e.g. a current beta release
-kube_version: 1.33.7
+kube_version: 1.34.3
 
 # Where the binaries will be downloaded.
 # Note: ensure that you've enough disk space (about 1G)
@@ -25,7 +25,8 @@ local_release_dir: "/tmp/releases"
 # Random shifts for retrying failed ops like pushing/downloading
 retry_stagger: 5
 
-# This is the user that owns tha cluster installation.
+# This is the user that owns the cluster installation.
+# Note: cilium needs to set kube_owner to root https://kubespray.io/#/docs/CNI/cilium?id=unprivileged-agent-configuration
 kube_owner: root
 
 # This is the group that the cert creation scripts chgrp the
