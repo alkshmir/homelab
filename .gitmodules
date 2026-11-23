@@ -1,4 +1,4 @@
 [submodule "kubespray/kubespray"]
 	path = kubespray/kubespray
 	url = git@github.com:kubernetes-sigs/kubespray
-	branch = release-2.30
+	branch = release-2.31
