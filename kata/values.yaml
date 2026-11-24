@@ -1,0 +1,18 @@
+# Install Kata Containers only on amd64 nodes (nucboxg3-1) to avoid
+# arm64/Raspberry Pi kernel & KVM compatibility issues.
+nodeSelector:
+  kubernetes.io/arch: amd64
+
+# Enable only the needed shims instead of creating all 8 default RuntimeClasses.
+shims:
+  disableAll: true
+  qemu-runtime-rs:
+    enabled: true
+  clh-runtime-rs:
+    enabled: true
+
+# Also create the default "kata" RuntimeClass (points to defaultShim.amd64: qemu-runtime-rs).
+runtimeClasses:
+  enabled: true
+  createDefault: true
+  defaultName: "kata"
