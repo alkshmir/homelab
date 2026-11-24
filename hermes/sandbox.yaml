@@ -1,0 +1,51 @@
+apiVersion: agents.x-k8s.io/v1beta1
+kind: Sandbox
+metadata:
+  name: hermes
+  namespace: hermes
+spec:
+  # Set to "Suspended" to stop the Kata VM and free RAM while keeping the PVC.
+  operatingMode: Running
+  podTemplate:
+    metadata:
+      labels:
+        app: hermes
+    spec:
+      # Cloud Hypervisor (lighter memory footprint than QEMU; use "kata" for QEMU).
+      runtimeClassName: kata-clh-runtime-rs
+      automountServiceAccountToken: false
+      containers:
+        - name: hermes
+          image: nousresearch/hermes-agent:v0.23.4
+          # Keep the image ENTRYPOINT (/opt/hermes/docker/entrypoint-dispatch.sh) intact
+          # so s6-overlay initializes /opt/data ownership and drops to HERMES_UID/GID.
+          args: ["gateway", "run"]
+          ports:
+            - name: api
+              containerPort: 8642
+          env:
+            - name: HERMES_UID
+              value: "10000"
+            - name: HERMES_GID
+              value: "10000"
+            # Uncomment to expose the OpenAI-compatible API server on port 8642
+            # (requires API_SERVER_KEY in secret.yaml).
+            # - name: API_SERVER_HOST
+            #   value: "0.0.0.0"
+          envFrom:
+            - secretRef:
+                name: hermes-credentials
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"
+          volumeMounts:
+            - name: hermes-data
+              mountPath: /opt/data
+      volumes:
+        - name: hermes-data
+          persistentVolumeClaim:
+            claimName: hermes-data

@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: hermes
+  namespace: hermes
+spec:
+  parentRefs:
+    - name: traefik-gateway
+      namespace: traefik
+  hostnames:
+    - hermes.homelab.local
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        # Matches the Service auto-created by a Sandbox named "hermes"
+        # (adjust port if exposing the web dashboard 9119 instead of API 8642).
+        - name: hermes
+          port: 8642
