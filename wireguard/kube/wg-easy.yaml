@@ -36,6 +36,10 @@ spec:
       labels:
         app.kubernetes.io/name: wg-easy
     spec:
+      # Raspberry Pi 5 (arm64, kernel 6.12+rpt-rpi-2712) lacks the legacy ip6_tables kernel module
+      # required by wg-quick's ip6tables-legacy rules; schedule on amd64 node (nucboxg3-1) instead.
+      nodeSelector:
+        kubernetes.io/arch: amd64
       containers:
         - name: wg-easy
           # Specify external hostname and port as environment variables
