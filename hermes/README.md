@@ -6,7 +6,7 @@ Prerequisites:
 
 1. Create namespace, default ServiceAccount (`automountServiceAccountToken: false`), resource limits, network isolation, and persistent volume:
    ```bash
-   kubectl apply -f namespace.yaml
+   kubectl apply --server-side -f namespace.yaml
    kubectl apply -f resourcequota.yaml
    kubectl apply -f networkpolicy.yaml
    kubectl apply -f pvc.yaml

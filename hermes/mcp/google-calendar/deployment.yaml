@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: google-calendar-mcp
+  namespace: hermes-mcp
+  labels:
+    app: google-calendar-mcp
+spec:
+  replicas: 1
+  # ReadWriteOnce Longhorn PVC requires Recreate to avoid multi-attach locks.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: google-calendar-mcp
+  template:
+    metadata:
+      labels:
+        app: google-calendar-mcp
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: google-calendar-mcp
+          image: node:22-alpine
+          args:
+            - npx
+            - "-y"
+            - "@cocal/google-calendar-mcp@2.8.1"
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: HOME
+              value: /tmp
+            - name: NPM_CONFIG_CACHE
+              value: /tmp/.npm
+            - name: TRANSPORT
+              value: http
+            - name: HOST
+              value: 0.0.0.0
+            - name: PORT
+              value: "3000"
+            - name: GOOGLE_OAUTH_CREDENTIALS
+              value: /credentials/gcp-oauth.keys.json
+            - name: GOOGLE_CALENDAR_MCP_TOKEN_PATH
+              value: /tokens/tokens.json
+            # Whitelist read + write tools only; explicitly excludes delete-event and manage-accounts.
+            - name: ENABLED_TOOLS
+              value: list-calendars,list-events,get-event,search-events,get-freebusy,get-current-time,list-colors,create-event,create-events,update-event,respond-to-event
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "192Mi"
+            limits:
+              cpu: "1500m"
+              memory: "512Mi"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 30
+          volumeMounts:
+            - name: credentials
+              mountPath: /credentials
+              readOnly: true
+            - name: tokens
+              mountPath: /tokens
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: credentials
+          secret:
+            secretName: google-calendar-oauth
+            defaultMode: 0400
+        - name: tokens
+          persistentVolumeClaim:
+            claimName: google-calendar-mcp-tokens
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: google-calendar-mcp
+  namespace: hermes-mcp
+  labels:
+    app: google-calendar-mcp
+spec:
+  type: ClusterIP
+  selector:
+    app: google-calendar-mcp
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
