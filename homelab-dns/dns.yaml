@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
         - name: blocky
-          image: spx01/blocky:v0.26.2
+          image: spx01/blocky:v0.37.0
           ports:
             - containerPort: 4000
               name: http # prometheus metrics
